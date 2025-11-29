@@ -14,7 +14,9 @@
   <div class="catalog">
   <div *ngFor="let item of items" class="item">
     <ion-img 
-  src="./assets/sample-images/{{item.images}}" class="product-image"></ion-img>
+      src="./assets/sample-images/{{item.images}}" 
+      class="product-image"
+      (click)="openImage('./assets/sample-images/' + item.images, item.name)"></ion-img>
     <h2>{{ item.name }}</h2>
     <p>Цена: {{ item.price }} руб</p>
     <p>Описание: {{ item.description }}</p>
@@ -22,8 +24,26 @@
   </div>
   </div>
 
-  
-
-  
+  <!-- Overlay для увеличенного изображения -->
+  <div *ngIf="selectedImage" class="image-overlay" (click)="closeImage()">
+    <div class="enlarged-image-container" (click)="$event.stopPropagation()">
+      <div class="image-header">
+        <h3>{{ selectedImage.name }}</h3>
+        <ion-button fill="clear" (click)="closeImage()" class="close-button">
+          <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+      <div class="image-wrapper"
+           (mouseenter)="onImageMouseEnter()"
+           (mouseleave)="onImageMouseLeave()"
+           (mousemove)="onImageMouseMove($event)">
+        <img [src]="selectedImage.path" [alt]="selectedImage.name" class="enlarged-image" />
+      </div>
+      <!-- Лупа -->
+      <div *ngIf="magnifierVisible" 
+           class="magnifier" 
+           [ngStyle]="magnifierStyle"></div>
+    </div>
+  </div>
 
 </ion-content>
